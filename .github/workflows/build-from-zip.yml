@@ -33,8 +33,18 @@ jobs:
           unzip -q VIP_PRO_CASINO_FULL_1_TO_9.zip -d unpacked
           cp -a unpacked/VIP_PRO_CASINO/. .
 
+      
+      - name: Inspect Gradle JVM targets
+        run: |
+          echo "=== Gradle files ==="
+          find . -maxdepth 5 \( -name "build.gradle" -o -name "build.gradle.kts" \) -print
+
+          echo "=== JVM configuration ==="
+          grep -RInE 'sourceCompatibility|targetCompatibility|jvmTarget|VERSION_1_8' --include="*.gradle" --include="*.gradle.kts" . || true
+
       - name: Build APK
         run: gradle --no-daemon assembleDebug
+        
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
