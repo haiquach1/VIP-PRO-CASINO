@@ -44,6 +44,11 @@ jobs:
 
       - name: Build APK
         run: gradle --no-daemon assembleDebug
+              - name: Fix JVM target compatibility
+        run: |
+          sed -i 's/VERSION_1_8/VERSION_17/g' app/build.gradle*
+          sed -i 's/1\.8/17/g' app/build.gradle*
+          
         
 
       - name: Upload APK
