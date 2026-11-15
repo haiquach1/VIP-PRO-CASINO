@@ -32,7 +32,7 @@ jobs:
           unzip -q VIP_PRO_CASINO_FULL_1_TO_9.zip -d unpacked
           cp -a unpacked/VIP_PRO_CASINO/. .
 
-      - name: Force JVM 17 for Java and Kotlin
+      - name: Force JVM 17 and Add AndroidX
         run: |
           if [ -f "app/build.gradle" ]; then
             cat << 'EOF' >> app/build.gradle
@@ -45,6 +45,11 @@ jobs:
               kotlinOptions {
                   jvmTarget = '17'
               }
+          }
+
+          dependencies {
+              implementation 'androidx.activity:activity-ktx:1.9.0'
+              implementation 'androidx.appcompat:appcompat:1.7.0'
           }
           EOF
           elif [ -f "app/build.gradle.kts" ]; then
@@ -59,6 +64,11 @@ jobs:
                   jvmTarget = "17"
               }
           }
+
+          dependencies {
+              implementation("androidx.activity:activity-ktx:1.9.0")
+              implementation("androidx.appcompat:appcompat:1.7.0")
+          }
           EOF
           fi
 
@@ -70,3 +80,4 @@ jobs:
         with:
           name: app-debug
           path: app/build/outputs/apk/debug/*.apk
+          
