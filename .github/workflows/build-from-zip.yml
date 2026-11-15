@@ -32,10 +32,35 @@ jobs:
           unzip -q VIP_PRO_CASINO_FULL_1_TO_9.zip -d unpacked
           cp -a unpacked/VIP_PRO_CASINO/. .
 
-      - name: Fix JVM target compatibility
+      - name: Force JVM 17 for Java and Kotlin
         run: |
-          find . -name "build.gradle*" -exec sed -i 's/VERSION_1_8/VERSION_17/g' {} +
-          find . -name "build.gradle*" -exec sed -i 's/1\.8/17/g' {} +
+          if [ -f "app/build.gradle" ]; then
+            cat << 'EOF' >> app/build.gradle
+
+          android {
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+              kotlinOptions {
+                  jvmTarget = '17'
+              }
+          }
+          EOF
+          elif [ -f "app/build.gradle.kts" ]; then
+            cat << 'EOF' >> app/build.gradle.kts
+
+          android {
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+              kotlinOptions {
+                  jvmTarget = "17"
+              }
+          }
+          EOF
+          fi
 
       - name: Build APK
         run: gradle --no-daemon assembleDebug
