@@ -31,7 +31,15 @@ jobs:
         run: |
           unzip -q VIP_PRO_CASINO_FULL_1_TO_9.zip -d unpacked
           cp -a unpacked/VIP_PRO_CASINO/. .
+    
+      - name: Inspect game source
+        run: |
+          echo "===== PROJECT FILES ====="
+          find app/src -type f 2>/dev/null | head -100
 
+          echo "===== GAME LOGIC ====="
+          grep -RInE 'demo|balance|money|coin|wallet|game' app/src --include="*.kt" --include="*.java" --include="*.html" --include="*.js" | head -150 || true
+          
       - name: Force JVM 17 and Add AndroidX
         run: |
           if [ -f "app/build.gradle" ]; then
